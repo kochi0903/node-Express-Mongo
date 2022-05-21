@@ -9,45 +9,45 @@ siteURL = "http://111.93.169.90:4011/";
 // Register
 exports.create = (req, res) => {
   var userInfo = req.body;
-  if (!req.body) {
+  if (!req.body.fullName &&  !req.body.email && !req.body.password) {
     return res.status(400).send({
       message: "Please Fill all details",
     });
-  } else {
+  } else{
     User.find({ email: req.body.email })
       .exec()
       .then((user) => {
-        if (user.length >= 1) {
-          return res.status(201).send({
-            message: "Mail exists",
-          });
-        } else {
-          var salt = bcrypt.genSaltSync(10);
-          var hash = bcrypt.hashSync(req.body.password, salt);
-          const user = new User({
-            fullName: userInfo.fullName,
-            contactNo: userInfo.contactNo,
-            email: userInfo.email,
-            specialization: userInfo.specialization,
-            password: hash,
-            salt: salt,
-            status: userInfo.status,
-            type: userInfo.type,
-          });
-          user
-            .save()
-            .then((result) => {
-              console.log(result); // info log
-              res.status(201).json({
-                message: "User sucessfully created",
-              });
-            })
-            .catch((err) => {
-              console.log(err); // to be modified
-              res.status(500).json({
-                error: err,
-              });
+        try {
+          if (user.length >= 1) {
+            return res.status(201).send({
+              message: "Mail exists",
             });
+          } else {
+            var salt = bcrypt.genSaltSync(10);
+            var hash = bcrypt.hashSync(req.body.password, salt);
+            const user = new User({
+              fullName: userInfo.fullName,
+              email: userInfo.email,
+              password: hash,
+              salt: salt,
+            });
+            user
+              .save()
+              .then((result) => {
+                console.log(result); // info log
+                res.status(201).json({
+                  message: "User sucessfully created",
+                });
+              })
+              .catch((err) => {
+                console.log(err); // to be modified
+                res.status(500).json({
+                  error: err,
+                });
+              });
+          }
+        } catch (error) {
+          console.log(error)
         }
       });
   }
@@ -55,7 +55,7 @@ exports.create = (req, res) => {
 
 //Login
 exports.login = (req, res) => {
-  User.find({ email: req.body.email, type: req.body.type })
+  User.find({ email: req.body.email })
     .exec()
     .then((user) => {
       if (user.length < 1) {
@@ -66,58 +66,23 @@ exports.login = (req, res) => {
         return res.status(201).json({
           message: "Wrong Password",
         });
-      } else if (user[0].status === 0) {
-        return res.status(201).json({
-          message: "Account has not yet approved your request",
-        });
       }
-
-      const token = jwt.sign(
-        {
-          email: user[0].email,
-        },
-        process.env.JWT_KEY,
-        {
-          expiresIn: "7 days",
-        }
-      );
-      return res.status(200).json({
-        message: "Login successful",
-        userDetails: user[0]._id,
-        token: token,
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({
-        error: err,
-      });
-    });
-};
-
-//Logout
-exports.logout = (req, res) => {
-  User.find({ email: req.body.email })
-    .exec()
-    .then((user) => {
-      if (user.length < 1) {
-        return res.status(201).json({
-          message: "Auth failed",
+      else {
+        const token = jwt.sign(
+          {
+            email: user[0].email,
+          },
+          process.env.JWT_KEY,
+          {
+            expiresIn: "7 days",
+          }
+        );
+        return res.status(200).json({
+          message: "Login successful",
+          userDetails: user[0],
+          token: token,
         });
-      }
-
-      const token = jwt.sign(
-        {
-          email: user[0].email,
-        },
-        process.env.JWT_KEY,
-        {
-          expiresIn: "1",
-        }
-      );
-      return res.status(200).json({
-        message: "Logout successful",
-      });
+      }    
     })
     .catch((err) => {
       console.log(err);

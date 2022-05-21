@@ -39,28 +39,28 @@ router.post("/registerProfile", cors(), Userprofile.create);
 
 router.post("/loginProfile", cors(), Userprofile.login);
 
-router.post("/logoutProfile", cors(), Userprofile.logout);
+// router.post("/logoutProfile", cors(), Userprofile.logout);
 
-router.post("/editProfile", cors(), Userprofile.editProfile);
+// router.post("/editProfile", cors(), Userprofile.editProfile);
 
-router.post(
-  "/imageUpload",
-  cors(),
-  upload.single("profilePic"),
-  Userprofile.imageUploadbyID
-);
+// router.post(
+//   "/imageUpload",
+//   cors(),
+//   upload.single("profilePic"),
+//   Userprofile.imageUploadbyID
+// );
 
-router.get("/findAllProfile", cors(), Userprofile.findAll);
+// router.get("/findAllProfile", cors(), Userprofile.findAll);
 
-router.post("/findProfileByID", cors(), Userprofile.findOne);
+// router.post("/findProfileByID", cors(), Userprofile.findOne);
 
-router.post("/updateStatus", cors(), Userprofile.update);
+// router.post("/updateStatus", cors(), Userprofile.update);
 
-router.post("/changePassword", cors(), Userprofile.changePassword);
+// router.post("/changePassword", cors(), Userprofile.changePassword);
 
-router.post("/forgotPassword", cors(), Userprofile.forgotPassword);
+// router.post("/forgotPassword", cors(), Userprofile.forgotPassword);
 
-router.post("/resetPassword", cors(), Userprofile.resetPassword);
+// router.post("/resetPassword", cors(), Userprofile.resetPassword);
 
 // router.post('/deleteProfile',cors(), Userprofile.delete);
 

@@ -3,44 +3,16 @@ const mongoose = require("mongoose");
 const user = new mongoose.Schema({
   fullName: {
     type: String,
-    required: true,
-  },
-  dateOfBirth: {
-    type: String,
-    default: "",
   },
   email: {
     type: String,
-    required: true,
     unique : true,
-  },
-  contactNo: {
-    type: String,
-    required: true,
-  },
-  specialization: {
-    type: String,
-    default: "",
-  },
-  education: {
-    type: String,
-    default: "",
-  },
-  address: {
-    type: String,
-    default: "",
-  },
-  degree: {
-    type: String,
-    default: "",
   },
   password: {
     type: String,
-    required: true,
   },
   salt: {
     type: String,
-    required: true,
   },
   profilePic: {
     type: String,
@@ -55,11 +27,12 @@ const user = new mongoose.Schema({
     type: String,
     default: "",
   },
-  type: {
+  userType: {
     type: Number,
-    enum: [0, 1, 2], //0 = admin ,1=doctor, 2=patient
+    enum: [0, 1], //0 = admin ,1=user
+    default: 1
   },
-  added_date: {
+  addedDate: {
     type: Date,
     default: Date.now,
   },
